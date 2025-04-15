@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>No Tab Switching</title>
+  <style>
+    #lock-screen {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      font-size: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+  <h1>Stay on this tab!</h1>
+  <p>This page will lock if you switch tabs.</p>
+
+  <div class="label">
+    <label for="link">LINK</label>
+    <input type="text" id="link" name="link" placeholder="https://">
+    <button onclick="redirectToLink()">Go</button>
+  </div>
+
+  <script>
+    function redirectToLink() {
+      const input = document.getElementById('link').value.trim();
+      const url = input.startsWith('http://') || input.startsWith('https://')
+        ? input
+        : 'https://' + input;
+
+      // Open the link in fullscreen mode without taskbar
+      const newWindow = window.open(url, '', 'fullscreen=yes');
+      if (newWindow) {
+        newWindow.focus();
+      } else {
+        alert('Popups are blocked. Please allow popups for fullscreen mode.');
+      }
+    }
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        document.getElementById("lock-screen").style.display = "flex";
+      }
+    });
+
+    document.getElementById('link').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        redirectToLink();
+      }
+    });
+  </script>
+</body>
+</html>
